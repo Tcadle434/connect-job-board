@@ -48,11 +48,19 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
+  description   String?
+  resume        String?
+  salary        String?
+  available     Boolean?
+  twitter       String?
+  website       String?
+  pastwork      PastWork[]
+  blockchain    String?
   accounts      Account[]
   sessions      Session[]
 }
@@ -63,4 +71,41 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Company {
+  id          String  @id @default(cuid())
+  name        String
+  logo        String?
+  description String?
+  website     String?
+  posts       Post[]
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  company     Company  @relation(fields: [companyId], references: [id])
+  companyId   String
+  title       String
+  description String
+  fulltime    Boolean
+  location    String?
+  salary      String?
+  link        String?
+  topic       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  blockchain  String
+}
+
+model PastWork {
+  id          String    @id @default(cuid())
+  User        User?     @relation(fields: [userId], references: [id])
+  userId      String?
+  company     String
+  position    String
+  start       DateTime?
+  end         DateTime?
+  description String
+  link        String?
 }
